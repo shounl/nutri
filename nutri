@@ -1,6 +1,60 @@
-git init
-git add .
-git commit -m "Initial commit"
-git branch -M main
-git remote add origin https://github.com/shounl/ai-nutrition-app.git
-git push -u origin main
+import React, { useState } from "react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+
+const NutritionApp = () => {
+  const [bloodValues, setBloodValues] = useState({
+    glucose: "",
+    cholesterol: "",
+    vitaminD: "",
+  });
+  const [advice, setAdvice] = useState(null);
+
+  const handleChange = (e) => {
+    setBloodValues({ ...bloodValues, [e.target.name]: e.target.value });
+  };
+
+  const analyzeBloodValues = () => {
+    let adviceText = "";
+    if (bloodValues.glucose > 110) {
+      adviceText += "Vermijd suikerrijke voeding en eet meer vezels. ";
+    }
+    if (bloodValues.cholesterol > 200) {
+      adviceText += "Verminder verzadigde vetten en verhoog omega-3 inname. ";
+    }
+    if (bloodValues.vitaminD < 30) {
+      adviceText += "Neem meer zonlicht en overweeg een vitamine D-supplement. ";
+    }
+    setAdvice(adviceText || "Je bloedwaarden zijn binnen gezonde grenzen!");
+  };
+
+  return (
+    <div className="p-4 max-w-lg mx-auto">
+      <h1 className="text-xl font-bold mb-4">AI Voedingsadvies op Basis van Bloedwaarden</h1>
+      <Card>
+        <CardContent>
+          <Label htmlFor="glucose">Glucose (mg/dL)</Label>
+          <Input name="glucose" type="number" onChange={handleChange} />
+
+          <Label htmlFor="cholesterol">Cholesterol (mg/dL)</Label>
+          <Input name="cholesterol" type="number" onChange={handleChange} />
+
+          <Label htmlFor="vitaminD">Vitamine D (ng/mL)</Label>
+          <Input name="vitaminD" type="number" onChange={handleChange} />
+
+          <Button className="mt-4" onClick={analyzeBloodValues}>Analyseer</Button>
+
+          {advice && (
+            <div className="mt-4 p-2 border rounded bg-gray-100">
+              <p>{advice}</p>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+    </div>
+  );
+};
+
+export default NutritionApp;
